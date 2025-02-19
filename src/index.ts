@@ -3,10 +3,14 @@
 import express, {Express, Request, Response} from "express";
 import dotenv from "dotenv";
 import { userRouter } from "./routes/user.route";
+import { db } from "./lib/connectionDB";
 
 dotenv.config();
 const app : Express = express();
 const port : number = process.env.PORT as any || 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.use('/user', userRouter);
 
@@ -22,6 +26,10 @@ app.get('/notFound', (req: Request, res: Response) => {
     res.status(404).send("Not found mi pana");
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-})
+
+
+db.then(()=>
+    app.listen(port, ()=>{
+        console.log(`Server is running on port ${port}`);
+    } )
+)

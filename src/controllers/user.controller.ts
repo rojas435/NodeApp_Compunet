@@ -1,6 +1,17 @@
 import { Request, Response } from "express";
+import User from "../models/user.models";
 
 class Usercontroller{
+
+
+    //NO hacer
+    public async creacte ( req : Request, res : Response){
+        const newUser = await User.create(req.body);
+        res.status(201).json(newUser);
+
+    }
+
+    //NO hacer
 
     public create ( req : Request, res : Response){
         res.status(201).send("create user");
