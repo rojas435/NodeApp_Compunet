@@ -15,6 +15,7 @@
   "author": "Felipe Rojas Prado",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongod": "^2.0.0",
@@ -26,6 +27,7 @@
     "yarn": "^1.22.22"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.1",
     "nodemon": "^3.1.9"

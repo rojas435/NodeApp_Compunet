@@ -6,7 +6,7 @@ export interface UserInput{
     password: string
 }
 
-export interface USerDocument extends UserInput, mongoose.Document{
+export interface UserDocument extends UserInput, mongoose.Document{
     createdAt: Date,
     updateAt: Date,
     deleteAt: Date
@@ -17,6 +17,5 @@ const userSchem = new mongoose.Schema({
     email: {type: String, required: true, index: true, unique: true},
     password: {type: String, required: true},
 },{timestamps: true, collection: "users"});
-const User = mongoose.model<USerDocument>("User", userSchem);
 
-export default User;
+export const UserModel = mongoose.model<UserDocument>("User", userSchem);
