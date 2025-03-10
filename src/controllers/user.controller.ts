@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserInput } from "../models";
+import { UserInput, UserDocument, UserModel, userLogin } from "../models";
 import { userService } from "../services";
 
 class Usercontroller{
@@ -17,9 +17,6 @@ class Usercontroller{
             }
             res.status(500).json(error);
         }
-
-        
-
     }
 
     //NO hacerNO NO SQUARE
@@ -28,20 +25,71 @@ class Usercontroller{
     //     res.status(201).send("create user");
     // }
 
-    public get ( req : Request, res : Response){
+    public async get ( req : Request, res : Response){
+        try {
+            const id: number = +req.params.id; // se puede escribir parseInt(req.params.id)
+            const user: UserDocument | null = await userService.findById(req.params.id);
+            if(user === null){
+                res.status(404).json({message: `User not found ${id} not found`});
+                return;
+            }
+            res.json(user);
+        } catch (error) {
+            throw error;
+            
+        }
         res.send(`Get user with id ${req.params.id}`);
     }
 
-    public getAll ( req : Request, res : Response){ 
+    public async getAll ( req : Request, res : Response){ 
+        try{
+            const user: UserDocument[] = await userService.findAll();
+        }catch(error){
+            res.status(500).json(error);
+        }
+
         res.send("Get all users");
     }
 
-    public update ( req : Request, res : Response){
-        res.send(`update user wit id ${req.params.id}`);
+    public async update ( req : Request, res : Response){
+        try {
+            const id: string = req.params.id;
+            const user: UserDocument | null = await userService.update(id, req.body as UserInput);
+            if(user === null){
+                res.status(404).json({message: `User not found ${id} not found`});
+                return;
+            }
+            res.json(user);
+        } catch (error) {
+            res.status(500).json(error);
+        }
     }
     
-    public delete ( req: Request, res : Response){
-        res.send(`Delete user with id ${req.params.id}`);
+    public async delete ( req: Request, res : Response){
+       try {
+        const id: string = req.params.id;
+        const user: UserDocument | null = await userService.delete(id);
+        if(user === null){
+            res.status(404).json({message: `User not found ${id} not found`});
+            return;
+        }
+        res.json(user);
+       } catch (error) {
+            res.status(500).json(error);
+       }
     }
+
+    public async login(req: Request, res: Response){
+        try {
+            const resObj = await userService.login(req.body as userLogin);
+            res.status(200).json(resObj);
+
+        } catch (error) {
+            //NO autorizado
+            res.status(500).json(error);
+        }
+    }
+
+
 }
 export const userController = new Usercontroller()

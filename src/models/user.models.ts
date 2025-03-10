@@ -3,7 +3,29 @@ import mongoose from "mongoose"
 export interface UserInput{
     name: string,
     email: string,
+    password: string // EL ? significa que es opcional
+}
+
+export interface UserInputUpdate{
+    name: string,
+    email: string,
+}
+
+export interface userLogin{
+    email: string,
     password: string
+}
+
+export interface UserLoginResponse{
+    user?: {
+        name: string,
+        email: string,
+        role: string[],
+        token: string
+    },
+    message: {
+        contents: string,
+        code: number}
 }
 
 export interface UserDocument extends UserInput, mongoose.Document{
