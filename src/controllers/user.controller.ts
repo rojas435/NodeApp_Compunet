@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { UserInput, UserDocument, UserModel, userLogin } from "../models";
+import { UserDocument, UserModel } from "../models";
+import {  UserInput, userLogin } from "../interfaces";
 import { userService } from "../services";
+import { AuthError } from "../exceptions";
 
 class Usercontroller{
 
@@ -85,6 +87,10 @@ class Usercontroller{
             res.status(200).json(resObj);
 
         } catch (error) {
+            if(error instanceof AuthError){
+                res.status(401).json({message: "User not authorized"});
+                return;
+            }
             //NO autorizado
             res.status(500).json(error);
         }

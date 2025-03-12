@@ -1,4 +1,6 @@
-import { UserDocument, UserInput, userLogin, UserModel, UserLoginResponse, UserInputUpdate } from "../models";
+import { UserInput, userLogin, UserLoginResponse, UserInputUpdate } from "../interfaces";
+import { UserDocument, UserModel } from "../models";
+import { AuthError } from "../exceptions";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -78,28 +80,27 @@ class UserService {
         try {
             const userExists: UserDocument | null = await this.findByEmail(userLogin.email);
             if (userExists === null) {
-                throw new ReferenceError("User already exists");
+                throw new AuthError("User already exists");
 
             }
             const isMatch: boolean = await bcrypt.compare(userLogin.password, userExists.password);
+        
             if(!isMatch){
-                throw new ReferenceError("Not authorized");
+                throw new AuthError("Not authorized");
+                console.log("NO hacen match")
             }
             return{
                 user: {
+                    id: userExists.id,
                     name: userExists.name,
                     email: userExists.email,
                     role: ["admin"],
                     token: this.generateToken(userExists.email)
-                },
-                message: {
-                    contents: "Auth OK",
-                    code: 200
                 }
             }
             
         } catch (error) {
-            
+            throw error;
         }
         
     }
